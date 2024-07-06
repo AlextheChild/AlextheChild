@@ -1,0 +1,19 @@
+import javax.swing.*;
+import java.awt.*;
+
+public class GUI extends JFrame {
+    PanelThing panel;
+
+    public GUI() {
+        panel = new PanelThing();
+
+        // final setup
+        this.add(panel, BorderLayout.CENTER);
+        this.setSize(1440, 900);
+        this.setUndecorated(true);
+        this.setBackground(new Color(0, 0, 0, 80));
+        this.setLocationRelativeTo(null);
+        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        this.setVisible(true);
+    }
+}
