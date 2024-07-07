@@ -2,10 +2,10 @@ import javax.swing.*;
 import java.awt.*;
 
 public class GUI extends JFrame {
-    PanelThing panel;
+    MainPanel panel;
 
     public GUI() {
-        panel = new PanelThing();
+        panel = new MainPanel();
 
         // final setup
         this.add(panel, BorderLayout.CENTER);

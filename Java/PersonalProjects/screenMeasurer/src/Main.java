@@ -1,6 +1,5 @@
 public class Main {
     /**
-     * connect to printscrn
      * screenshot functionality
      */
 
