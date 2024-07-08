@@ -1,11 +1,19 @@
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.awt.image.*;
+import java.io.*;
+import javax.imageio.ImageIO;
 
 public class MainPanel extends JPanel implements MouseListener, MouseMotionListener, KeyListener {
+    final int width = 1440, height = 900;
+    final int rightMargin = 70, bottomMargin = 30;
+
     JLabel coordLabel;
-    int width = 1440, height = 900;
-    int rightMargin = 70, bottomMargin = 30;
+
+    boolean dragging = false;
+    int beforeDraggedX, beforeDraggedY;
+    int dragOffsetX, dragOffsetY;
 
     public MainPanel() {
         coordLabel = new JLabel("", SwingConstants.CENTER);
@@ -24,25 +32,68 @@ public class MainPanel extends JPanel implements MouseListener, MouseMotionListe
         this.requestFocus();
     }
 
+    @Override
+    public void paintComponent(Graphics g) {
+        super.paintComponent(g);
+        Graphics2D g2 = (Graphics2D) g;
+        g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+
+        if (dragging) {
+            // ! negatives
+            g.setColor(new Color(255, 255, 255, 150));
+            g.fillRect(beforeDraggedX, beforeDraggedY, dragOffsetX, dragOffsetY);
+            g.setColor(new Color(255, 255, 255, 200));
+            g.drawRect(beforeDraggedX, beforeDraggedY, dragOffsetX, dragOffsetY);
+        }
+    }
+
     // ————— screenshot ————— //
     @Override
     public void mousePressed(MouseEvent e) {
+        dragging = true;
+        beforeDraggedX = e.getX();
+        beforeDraggedY = e.getY();
     }
 
     @Override
     public void mouseDragged(MouseEvent e) {
+        displayCoords(e);
+
+        dragOffsetX = e.getX() - beforeDraggedX;
+        dragOffsetY = e.getY() - beforeDraggedY;
+        repaint();
     }
 
     @Override
     public void mouseReleased(MouseEvent e) {
+        dragging = false;
+        repaint();
+        try {
+            takeScreenshot(beforeDraggedX, beforeDraggedY, dragOffsetX, dragOffsetY);
+        } catch (Exception ex) {
+            System.out.println("Error taking screenshot");
+        }
+        System.exit(0);
+    }
+
+    public void takeScreenshot(int x, int y, int w, int h) throws AWTException, IOException {
+        // ! opacity
+        // ! copy to clipboard
+        Robot r = new Robot();
+        BufferedImage Image = r.createScreenCapture(new Rectangle(x, y, w, h));
+        ImageIO.write(Image, "png", new File("screenshot" + System.currentTimeMillis() + ".png"));
     }
 
     // ————— coord display ————— //
 
     @Override
     public void mouseMoved(MouseEvent e) {
-        int x = e.getXOnScreen();
-        int y = e.getYOnScreen();
+        displayCoords(e);
+    }
+
+    public void displayCoords(MouseEvent e) {
+        int x = e.getX();
+        int y = e.getY();
         coordLabel.setText(x + ", " + y);
 
         // marginalization
