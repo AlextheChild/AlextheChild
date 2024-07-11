@@ -5,7 +5,7 @@ import java.awt.image.*;
 import java.io.*;
 import javax.imageio.ImageIO;
 
-public class MainPanel extends JPanel implements MouseListener, MouseMotionListener, KeyListener {
+public class MainPanel extends JPanel implements MouseListener, MouseMotionListener {
     final int width = 1440, height = 900;
     final int rightMargin = 70, bottomMargin = 30;
     final String saveFolderPath = "C:/Users/Alex/Desktop/";
@@ -28,9 +28,9 @@ public class MainPanel extends JPanel implements MouseListener, MouseMotionListe
         this.setOpaque(false);
         this.addMouseListener(this);
         this.addMouseMotionListener(this);
-        this.addKeyListener(this);
         this.setFocusable(true);
         this.requestFocus();
+        this.requestFocusInWindow();
     }
 
     @Override
@@ -40,28 +40,51 @@ public class MainPanel extends JPanel implements MouseListener, MouseMotionListe
         g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
         if (dragging) {
-            // ! negatives
+            int x1 = beforeDraggedX;
+            int y1 = beforeDraggedY;
+            int x2 = beforeDraggedX + dragOffsetX;
+            int y2 = beforeDraggedY + dragOffsetY;
+
+            int minX = Math.min(x1, x2);
+            int minY = Math.min(y1, y2);
+            int maxX = Math.max(x1, x2);
+            int maxY = Math.max(y1, y2);
+
+            int selectX = minX;
+            int selectY = minY;
+            int selectW = maxX - minX;
+            int selectH = maxY - minY;
+
             g.setColor(new Color(255, 255, 255, 150));
-            g.fillRect(beforeDraggedX, beforeDraggedY, dragOffsetX, dragOffsetY);
+            g.fillRect(selectX, selectY, selectW, selectH);
             g.setColor(new Color(255, 255, 255, 200));
-            g.drawRect(beforeDraggedX, beforeDraggedY, dragOffsetX, dragOffsetY);
+            g.drawRect(selectX, selectY, selectW, selectH);
         }
     }
 
     // ————— screenshot ————— //
+
     @Override
     public void mousePressed(MouseEvent e) {
-        dragging = true;
-        beforeDraggedX = e.getX();
-        beforeDraggedY = e.getY();
+        if (e.getButton() == MouseEvent.BUTTON1) {
+            dragging = true;
+            beforeDraggedX = e.getX();
+            beforeDraggedY = e.getY();
+        }
+        if (e.getButton() == MouseEvent.BUTTON3 && dragging) {
+            System.exit(0);
+        }
     }
 
     @Override
     public void mouseDragged(MouseEvent e) {
-        dragOffsetX = e.getX() - beforeDraggedX;
-        dragOffsetY = e.getY() - beforeDraggedY;
+        int x = e.getX();
+        int y = e.getY();
 
-        displayNums(dragOffsetX, dragOffsetY);
+        dragOffsetX = x - beforeDraggedX;
+        dragOffsetY = y - beforeDraggedY;
+
+        displayNums(x, y, Math.abs(dragOffsetX), Math.abs(dragOffsetY));
         repaint();
     }
 
@@ -80,7 +103,9 @@ public class MainPanel extends JPanel implements MouseListener, MouseMotionListe
     }
 
     public void takeScreenshot(int x, int y, int w, int h) throws AWTException, IOException {
-        // ! opacity
+        JFrame GUI = (JFrame) SwingUtilities.getWindowAncestor(this);
+        GUI.dispose();
+
         // take screenshot
         Robot r = new Robot();
         BufferedImage image = r.createScreenCapture(new Rectangle(x, y, w, h));
@@ -98,20 +123,20 @@ public class MainPanel extends JPanel implements MouseListener, MouseMotionListe
     public void mouseMoved(MouseEvent e) {
         int x = e.getX();
         int y = e.getY();
-        displayNums(x, y);
+        displayNums(x, y, x, y);
     }
 
-    public void displayNums(int num1, int num2) {
+    public void displayNums(int x, int y, int num1, int num2) {
         coordLabel.setText(num1 + ", " + num2);
 
         // marginalization
-        if (num1 > width - rightMargin) {
-            num1 -= rightMargin;
+        if (x > width - rightMargin) {
+            x -= rightMargin;
         }
-        if (num2 > height - bottomMargin) {
-            num2 -= bottomMargin;
+        if (y > height - bottomMargin) {
+            y -= bottomMargin;
         }
-        coordLabel.setBounds(num1, num2, 70, 30);
+        coordLabel.setBounds(x, y, 70, 30);
     }
 
     // ————— exiting ————— //
@@ -121,27 +146,13 @@ public class MainPanel extends JPanel implements MouseListener, MouseMotionListe
         System.exit(0);
     }
 
-    @Override
-    public void keyPressed(KeyEvent e) {
-        if (e.getKeyCode() == 27) {
-            System.exit(0);
-        }
-    }
-
     // ————— hell ————— //
+
     @Override
     public void mouseEntered(MouseEvent e) {
     }
 
     @Override
     public void mouseExited(MouseEvent e) {
-    }
-
-    @Override
-    public void keyReleased(KeyEvent e) {
-    }
-
-    @Override
-    public void keyTyped(KeyEvent e) {
     }
 }
