@@ -15,6 +15,7 @@ public class MainPanel extends JPanel implements MouseListener, MouseMotionListe
     boolean dragging = false;
     int beforeDraggedX, beforeDraggedY;
     int dragOffsetX, dragOffsetY;
+    int selectX, selectY, selectW, selectH;
 
     public MainPanel() {
         coordLabel = new JLabel("", SwingConstants.CENTER);
@@ -50,10 +51,10 @@ public class MainPanel extends JPanel implements MouseListener, MouseMotionListe
             int maxX = Math.max(x1, x2);
             int maxY = Math.max(y1, y2);
 
-            int selectX = minX;
-            int selectY = minY;
-            int selectW = maxX - minX;
-            int selectH = maxY - minY;
+            selectX = minX;
+            selectY = minY;
+            selectW = maxX - minX;
+            selectH = maxY - minY;
 
             g.setColor(new Color(255, 255, 255, 150));
             g.fillRect(selectX, selectY, selectW, selectH);
@@ -94,7 +95,7 @@ public class MainPanel extends JPanel implements MouseListener, MouseMotionListe
         repaint();
 
         try {
-            takeScreenshot(beforeDraggedX, beforeDraggedY, dragOffsetX, dragOffsetY);
+            takeScreenshot(selectX, selectY, selectW, selectH);
         } catch (Exception ex) {
             System.out.println("Error taking screenshot");
         }
