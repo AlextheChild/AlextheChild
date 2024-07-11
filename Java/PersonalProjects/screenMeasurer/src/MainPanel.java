@@ -8,6 +8,7 @@ import javax.imageio.ImageIO;
 public class MainPanel extends JPanel implements MouseListener, MouseMotionListener, KeyListener {
     final int width = 1440, height = 900;
     final int rightMargin = 70, bottomMargin = 30;
+    final String saveFolderPath = "C:/Users/Alex/Desktop/";
 
     JLabel coordLabel;
 
@@ -57,10 +58,10 @@ public class MainPanel extends JPanel implements MouseListener, MouseMotionListe
 
     @Override
     public void mouseDragged(MouseEvent e) {
-        displayCoords(e);
-
         dragOffsetX = e.getX() - beforeDraggedX;
         dragOffsetY = e.getY() - beforeDraggedY;
+
+        displayNums(dragOffsetX, dragOffsetY);
         repaint();
     }
 
@@ -68,42 +69,50 @@ public class MainPanel extends JPanel implements MouseListener, MouseMotionListe
     public void mouseReleased(MouseEvent e) {
         dragging = false;
         repaint();
+
         try {
             takeScreenshot(beforeDraggedX, beforeDraggedY, dragOffsetX, dragOffsetY);
         } catch (Exception ex) {
             System.out.println("Error taking screenshot");
         }
+
         System.exit(0);
     }
 
     public void takeScreenshot(int x, int y, int w, int h) throws AWTException, IOException {
         // ! opacity
         // ! copy to clipboard
+        // take screenshot
         Robot r = new Robot();
-        BufferedImage Image = r.createScreenCapture(new Rectangle(x, y, w, h));
-        ImageIO.write(Image, "png", new File("screenshot" + System.currentTimeMillis() + ".png"));
+        BufferedImage image = r.createScreenCapture(new Rectangle(x, y, w, h));
+
+        // save
+        ImageIO.write(image, "png", new File(saveFolderPath + "screenshot" + System.currentTimeMillis() + ".png"));
+
+        // copy to clipboard
+        new ImageCopier(image);
     }
 
     // ————— coord display ————— //
 
     @Override
     public void mouseMoved(MouseEvent e) {
-        displayCoords(e);
-    }
-
-    public void displayCoords(MouseEvent e) {
         int x = e.getX();
         int y = e.getY();
-        coordLabel.setText(x + ", " + y);
+        displayNums(x, y);
+    }
+
+    public void displayNums(int num1, int num2) {
+        coordLabel.setText(num1 + ", " + num2);
 
         // marginalization
-        if (x > width - rightMargin) {
-            x -= rightMargin;
+        if (num1 > width - rightMargin) {
+            num1 -= rightMargin;
         }
-        if (y > height - bottomMargin) {
-            y -= bottomMargin;
+        if (num2 > height - bottomMargin) {
+            num2 -= bottomMargin;
         }
-        coordLabel.setBounds(x, y, 70, 30);
+        coordLabel.setBounds(num1, num2, 70, 30);
     }
 
     // ————— exiting ————— //
