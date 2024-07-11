@@ -4,6 +4,7 @@ import java.awt.event.*;
 import java.awt.image.*;
 import java.io.*;
 import javax.imageio.ImageIO;
+import java.util.List;
 
 public class MainPanel extends JPanel implements MouseListener, MouseMotionListener {
     final int width = 1440, height = 900;
@@ -109,7 +110,14 @@ public class MainPanel extends JPanel implements MouseListener, MouseMotionListe
 
         // take screenshot
         Robot r = new Robot();
-        BufferedImage image = r.createScreenCapture(new Rectangle(x, y, w, h));
+        BufferedImage image;
+        MultiResolutionImage mrImage = r.createMultiResolutionScreenCapture(new Rectangle(x, y, w, h));
+        List<Image> resolutionVariants = mrImage.getResolutionVariants();
+        if (resolutionVariants.size() > 1) {
+            image = (BufferedImage) resolutionVariants.get(1);
+        } else {
+            image = (BufferedImage) resolutionVariants.get(0);
+        }
 
         // save
         ImageIO.write(image, "png", new File(saveFolderPath + "screenshot" + System.currentTimeMillis() + ".png"));
