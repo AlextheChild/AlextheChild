@@ -81,7 +81,6 @@ public class MainPanel extends JPanel implements MouseListener, MouseMotionListe
 
     public void takeScreenshot(int x, int y, int w, int h) throws AWTException, IOException {
         // ! opacity
-        // ! copy to clipboard
         // take screenshot
         Robot r = new Robot();
         BufferedImage image = r.createScreenCapture(new Rectangle(x, y, w, h));
