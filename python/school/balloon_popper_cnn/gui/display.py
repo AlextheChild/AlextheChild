@@ -20,7 +20,7 @@ def get_image(l, d):
 
     global root, canvas
 
-    # take a screenshot of the specified region and save it so that the ai can access it
+    # take a screenshot of the specified region and save it
     image = r.screenshot(region=[l[0], l[1], d[0], d[1]])
     image.save("screen.png")
 
@@ -97,10 +97,14 @@ def display_ai_output(lefttop=[0, 0], dimensions=[r.size()[0] // 2, r.size()[1]]
 
     global root, canvas, robot_on
 
-    # create the tkinter window and create keybindings
+    # create the tkinter window
     root = tk.Tk()
     root.title("ai_output")
-    root.geometry(f"{dimensions[0]}x{dimensions[1] - 28}+{1920-dimensions[0]}+0")
+    root.geometry(
+        f"{dimensions[0]}x{dimensions[1] - top_bar_height}+{r.size()[0]-dimensions[0]}+0"
+    )
+
+    # keybindings
     root.bind("<b>", reset_bounds)
     root.bind("<r>", switch_robot)
     root.bind("<p>", close_window)

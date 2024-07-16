@@ -8,23 +8,24 @@ from PIL import Image
 # import random
 
 tf.function(reduce_retracing=True)
+
 global model
-model = keras.models.load_model("cnn/models/vgg_flippedfixed_20_20.keras")
+model = keras.models.load_model("cnn/models/vgg_better_20_20.keras")
 
 
 # ————— ccn functions ————— #
 
 
 def prepare_cnn_image():
-    image_resolution_divisor = 20  #! bullshit
+    image_resolution = 20  #! bullshit
 
     # edit image
     image = Image.open("screen.png")
-    # ! first convert to 2880
+
     image = image.convert("RGB").resize(
         [
-            image.width // (image_resolution_divisor),
-            image.height // (image_resolution_divisor),
+            int(image.width * (2880 / 1920) // (image_resolution)),
+            int(image.height * (1800 / 1200) // (image_resolution)),
         ]
     )
     image = np.asarray(image)[None, :]
@@ -34,14 +35,14 @@ def prepare_cnn_image():
     shape = image.shape
     image = image.tolist()
     padded_image = np.zeros(
-        # ! these magic numbers are just straight wrong
-        [1, 1800 // image_resolution_divisor, 2880 // image_resolution_divisor, 3]
+        [1, 1800 // image_resolution, 2880 // image_resolution, 3]
     ).tolist()
     for i in range(shape[1]):
         for j in range(shape[2]):
             padded_image[0][i][j] = image[0][i][j]
+    padded_image = np.asarray(padded_image)
 
-    return np.asarray(padded_image)
+    return padded_image
 
 
 def get_cnn_prediction():
@@ -50,10 +51,10 @@ def get_cnn_prediction():
     # scale the predictions back up to screen size
     # ! also probably wrong
     for i in balloon_positions:
-        i[0] *= 2880
-        i[1] *= 1800
-        i[2] *= 2880
-        i[3] *= 1800
+        i[0] *= 1920
+        i[1] *= 1200
+        i[2] *= 1920
+        i[3] *= 1200
 
     return balloon_positions
 

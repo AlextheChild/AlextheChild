@@ -1,3 +1,7 @@
+import os
+
+os.environ["TF_ENABLE_ONEDNN_OPTS"] = "0"
+
 import website as w
 import display as d
 
@@ -5,13 +9,15 @@ import display as d
 
 
 def main():
-    # b for window
-    # r turn robot on/off
-    # p close
+    """
+    b for window
+    r turn robot on/off
+    p close
+    """
 
-    w.open_window()
+    # w.open_window()
     d.display_ai_output()
-    w.close_window()
+    # w.close_window()
 
 
 main()
