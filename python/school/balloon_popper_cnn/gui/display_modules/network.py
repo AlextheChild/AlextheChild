@@ -19,7 +19,7 @@ def prepare_cnn_image():
     image_resolution_divisor = 20  #! bullshit
 
     # edit image
-    image = Image.open("C:/Users/Alex/Documents/balloon_popper_cnn/screen.png")
+    image = Image.open("screen.png")
     # ! first convert to 2880
     image = image.convert("RGB").resize(
         [

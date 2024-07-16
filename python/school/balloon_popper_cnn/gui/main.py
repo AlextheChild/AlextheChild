@@ -1,23 +1,17 @@
 import website as w
+import display as d
 
-# import display as d
+#! grey color for padding
 
 
 def main():
-    #     print(
-    #         """
-    # Note: this project features some keyboard shortcuts for user convenience:
-    #     Press <b> to redefine the window of the screen intended to record the Google search results page.
-    #     Press <r> to pause/unpause the automated balloon popping.
-    #     Press <p> to destroy the window.
-    #         """
-    #     )
+    # b for window
+    # r turn robot on/off
+    # p close
 
     w.open_window()
-    # d.display_ai_output()
-    # w.close_window()
-
-    #! grey color for padding
+    d.display_ai_output()
+    w.close_window()
 
 
 main()
