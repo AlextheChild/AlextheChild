@@ -109,6 +109,8 @@ def display_ai_output(lefttop=[0, 0], dimensions=[r.size()[0] // 2, r.size()[1]]
     root.bind("<r>", switch_robot)
     root.bind("<p>", close_window)
 
+    print(root.size)
+
     # start the canvas display
     canvas = tk.Canvas(width=dimensions[0], height=dimensions[1], highlightthickness=0)
     canvas.grid(row=0, column=0)

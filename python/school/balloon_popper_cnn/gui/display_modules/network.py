@@ -49,7 +49,6 @@ def get_cnn_prediction():
     balloon_positions = model.predict(prepare_cnn_image(), verbose=0)
 
     # scale the predictions back up to screen size
-    # ! also probably wrong
     for i in balloon_positions:
         i[0] *= 1920
         i[1] *= 1200
