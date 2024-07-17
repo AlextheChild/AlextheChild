@@ -1,12 +1,12 @@
 import os
 from PIL import Image
 
-directory = os.listdir("cnn/data/train/images")
+directory = os.listdir("cnn/data/test/images")
 
 count = 0
 
 for file in directory:
-    image = Image.open("cnn/data/train/images/" + file)
-    image.save("cnn/data/train/renamed_images/" + str(count) + ".png")
+    image = Image.open("cnn/data/test/images/" + file)
+    image.save("cnn/0data/test/images/" + str(count) + ".png")
 
     count += 1
