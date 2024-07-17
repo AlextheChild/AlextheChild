@@ -1,7 +1,4 @@
-train_rows = open("cnn/data/train/train.csv").read().strip().split("\n")
-test_rows = open("cnn/data/test/test.csv").read().strip().split("\n")
-
-rows = train_rows
+rows = open("cnn/data/data.csv").read().strip().split("\n")
 
 for row in rows:
     row = row.split(", ")

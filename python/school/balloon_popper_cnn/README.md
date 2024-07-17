@@ -11,6 +11,7 @@
     - starting loss: 0.09
     - ending loss: 0.02
 
-# Comments: 
-- there are a lot of magic variables/numbers in the gui code so maybe change that
-- make framerate better
+# GUI controls: 
+- b for window
+- r turn robot on/off
+- p close
