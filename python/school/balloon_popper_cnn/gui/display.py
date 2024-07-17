@@ -43,7 +43,6 @@ def pop_balloons(balloon_positions):
         x2 = i[0] + i[2]
         y2 = i[1] + i[3] - top_bar_height
         canvas.create_rectangle(x1, y1, x2, y2, outline="#ff0000")
-        print(x1, y1, x2, y2)
 
         # move the mouse and click on balloons while maintaining focus on the display
         if robot_on:
@@ -108,8 +107,6 @@ def display_ai_output(lefttop=[0, 0], dimensions=[r.size()[0] // 2, r.size()[1]]
     root.bind("<b>", reset_bounds)
     root.bind("<r>", switch_robot)
     root.bind("<p>", close_window)
-
-    print(root.size)
 
     # start the canvas display
     canvas = tk.Canvas(width=dimensions[0], height=dimensions[1], highlightthickness=0)
