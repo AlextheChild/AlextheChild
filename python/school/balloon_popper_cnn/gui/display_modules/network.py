@@ -9,7 +9,6 @@ from PIL import Image
 
 tf.function(reduce_retracing=True)
 
-global model
 model = keras.models.load_model("cnn/models/vgg_good_20_20.keras")
 
 

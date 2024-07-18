@@ -12,8 +12,6 @@ def set_bounds():
     This function is called when the user destroyes the bounds window.
     """
 
-    global bounds_window, lefttop, dimensions
-
     lefttop = [bounds_window.winfo_rootx(), bounds_window.winfo_rooty() - 28]
     dimensions = [bounds_window.winfo_width(), bounds_window.winfo_height() + 28]
 
@@ -30,7 +28,7 @@ def set_bounds():
 def create_bounds_window(root):
     """Allows the user to change size of the window that is taken as input."""
 
-    global bounds_window, lefttop, dimensions, instructions
+    global bounds_window
 
     bounds_window = tk.Toplevel()
     bounds_window.title("bounds_window")

@@ -10,9 +10,6 @@ import display as d
 ! cv2 color masking
 ! there are a lot of magic variables/numbers in the gui code so maybe change that
 ! make framerate better
-! clean up global variables
-! yolo type network
-! problem with this kind of network is that when the model is training you're basically making it guess which balloon you want from the same image
 """
 
 

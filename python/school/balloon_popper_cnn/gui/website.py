@@ -24,6 +24,4 @@ def open_window():
 
 
 def close_window():
-    global driver
-
     driver.close()

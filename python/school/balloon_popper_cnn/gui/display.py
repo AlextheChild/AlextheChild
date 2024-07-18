@@ -8,7 +8,6 @@ r.FAILSAFE = False
 import display_modules.bounds as b
 import display_modules.network as n
 
-global top_bar_height
 top_bar_height = 39  # apple = 28
 
 
@@ -17,8 +16,6 @@ top_bar_height = 39  # apple = 28
 
 def get_image(l, d):
     """Takes a screenshot of the user-specified region of the screen, saves it, and updates the canvas."""
-
-    global root, canvas
 
     # take a screenshot of the specified region and save it
     image = r.screenshot(region=[l[0], l[1], d[0], d[1]])
@@ -33,8 +30,6 @@ def get_image(l, d):
 
 def pop_balloons(balloon_positions):
     """Draws bounding boxes on the balloons, and, if robot is turned on, moves the mouse to the balloons and clicks them."""
-
-    global root, canvas
 
     for i in balloon_positions:
         # draw rectangle bounding boxes
@@ -55,7 +50,7 @@ def pop_balloons(balloon_positions):
 
 
 def update(l, d):
-    global robot_on, after
+    global after
 
     get_image(l, d)
     pop_balloons(n.get_cnn_prediction())
@@ -67,23 +62,16 @@ def update(l, d):
 
 
 def reset_bounds(event):
-    global root, robot_on
-
-    # stop the mouse movement and detection
     robot_on = False
     b.create_bounds_window(root)
     robot_on = True
 
 
 def switch_robot(event):
-    global robot_on
-
     robot_on = not robot_on
 
 
 def close_window(event):
-    global root, after
-
     root.after_cancel(after)
     root.destroy()
 
