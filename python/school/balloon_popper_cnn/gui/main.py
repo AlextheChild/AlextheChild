@@ -10,6 +10,7 @@ import display as d
 ! cv2 color masking
 ! there are a lot of magic variables/numbers in the gui code so maybe change that
 ! make framerate better
+! opencv for image processing
 """
 
 

@@ -3,9 +3,9 @@ from tensorflow import keras
 import numpy as np
 from PIL import Image
 
-# import pyautogui as robot
-# import cv2
-# import random
+import pyautogui as robot
+import cv2
+import random
 
 tf.function(reduce_retracing=True)
 
@@ -16,12 +16,12 @@ model = keras.models.load_model("cnn/models/vgg_good_20_20.keras")
 
 
 def prepare_cnn_image():
-    image_resolution = 20  #! bullshit
+    image_resolution = 20
 
     # edit image
     image = Image.open("screen.png")
 
-    image = image.convert("RGB").resize(
+    image = image.convert("RGBA").resize(
         [
             int(image.width * (2880 / 1920) // (image_resolution)),
             int(image.height * (1800 / 1200) // (image_resolution)),
@@ -41,7 +41,7 @@ def prepare_cnn_image():
             padded_image[0][i][j] = image[0][i][j]
     padded_image = np.asarray(padded_image)
 
-    return padded_image
+    return image
 
 
 def get_cnn_prediction():
@@ -57,7 +57,54 @@ def get_cnn_prediction():
     return balloon_positions
 
 
+# ————— yolo stuff ————— #
+
+
+def get_selective_search_proposals():
+    selective_search = cv2.ximgproc.segmentation.createSelectiveSearchSegmentation()
+    selective_search.setBaseImage(prepare_cv2_image())
+    selective_search.switchToSelectiveSearchFast()
+
+    rects = selective_search.process()
+
+    rects = [
+        rects[0] * 20 * (1920 / 2880),
+        rects[1] * 20 * (1200 / 1800),
+        rects[2] * 20 * (1920 / 2880),
+        rects[3] * 20 * (1200 / 1800),
+    ]
+
+    balloon_proposals = []
+
+    for rect in rects:
+        # too small
+        if rect[2] < 200 or rect[3] < 200:
+            continue
+
+        balloon_proposals.append(rect)
+
+    return balloon_proposals
+
+
+def prepare_cv2_image():
+    image_resolution = 20  #! bullshit
+
+    # edit image
+    image = Image.open("screen.png")
+
+    image = image.convert("RGBA").resize(
+        [
+            int(image.width * (2880 / 1920) // (image_resolution)),
+            int(image.height * (1800 / 1200) // (image_resolution)),
+        ]
+    )
+    image = np.asarray(image)
+
+    return image
+
+
 # ————— substitute prediction functions ————— #
+
 
 """
 # only works on stop signs
@@ -74,18 +121,6 @@ def get_haar_prediction():
         balloon_positions.append([x, y, x + width, y + height])
 
     return balloon_positions
-
-
-# doesn't work
-def get_pyautogui_prediction():
-    try:
-        pos = robot.locateOnScreen(
-            "/Users/ashao26/Dropbox/Code/python/HusShaoAlexandreIntroPythonF/projects/balloon_popper/display_modules/py.png",
-            confidence=0.6,
-        )
-        return [[pos[0], pos[1], pos[0] + pos[2], pos[3]]]
-    except robot.ImageNotFoundException:
-        return [[0, 0, 0, 0]]
 
 
 # is stupid

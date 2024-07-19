@@ -53,7 +53,7 @@ def update(l, d):
     global after
 
     get_image(l, d)
-    pop_balloons(n.get_cnn_prediction())
+    pop_balloons(n.get_selective_search_proposals())
 
     after = root.after(500, lambda: update(l, d))  # calls itself after half a second
 
