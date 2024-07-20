@@ -11,6 +11,8 @@ import display as d
 ! there are a lot of magic variables/numbers in the gui code so maybe change that
 ! make framerate better
 ! opencv for image processing
+! convert all saved imagest from RGBA to RGB
+! global variables
 """
 
 

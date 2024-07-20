@@ -1,4 +1,4 @@
-rows = open("cnn/data/raw_csv_files/data3.csv").read().strip().split("\n")[1:]
+rows = open("models/cnn/data/raw_csv_files/data3.csv").read().strip().split("\n")[1:]
 
 for row in rows:
     row = row.split(",")

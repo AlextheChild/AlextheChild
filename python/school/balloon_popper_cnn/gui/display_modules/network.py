@@ -22,7 +22,7 @@ def prepare_cnn_image():
     # edit image
     image = Image.open("screen.png")
 
-    image = image.convert("RGBA").resize(
+    image = image.convert("RGB").resize(
         [
             int(image.width * (2880 / 1920) // (image_resolution)),
             int(image.height * (1800 / 1200) // (image_resolution)),
@@ -69,6 +69,8 @@ def get_cnn_prediction():
 
 
 def get_selective_search_proposals():
+    global total, count
+
     selective_search = cv2.ximgproc.segmentation.createSelectiveSearchSegmentation()
     selective_search.setBaseImage(prepare_cv2_image())
     selective_search.switchToSelectiveSearchFast()
@@ -82,16 +84,43 @@ def get_selective_search_proposals():
         rects[3] * 20 * (1200 / 1800),
     ]
 
-    balloon_proposals = []
+    proposals = []
 
+    proposal_list = []
     for rect in rects:
-        # too small
-        if rect[2] < 200 or rect[3] < 200:
+        x = rect[0]
+        y = rect[1]
+        w = rect[2]
+        h = rect[3]
+
+        # size filter
+        if w < 200 or h < 200 or w > 900 or h > 900:
             continue
 
-        balloon_proposals.append(rect)
+        # split in halves
+        if w > 500 and h > 600:
+            tl = [x, y, w / 2, h / 2]
+            bl = [x, y + h / 2, w / 2, h / 2]
+            tr = [x + w / 2, y, w / 2, h / 2]
+            br = [x + w / 2, y + h / 2, w / 2, h / 2]
 
-    return balloon_proposals
+            proposal_list.extend([tl, bl, tr, br])
+        elif w > 500:
+            l = [x, y, w / 2, h]
+            r = [x + w / 2, y, w / 2, h]
+
+            proposal_list.extend([l, r])
+        elif h > 600:
+            t = [x, y, w, h / 2]
+            b = [x, y + h / 2, w, h / 2]
+
+            proposal_list.extend([t, b])
+        else:
+            proposal_list.append(rect)
+
+        proposals.extend(proposal_list)
+
+    return proposals
 
 
 def prepare_cv2_image():
@@ -100,7 +129,7 @@ def prepare_cv2_image():
     # edit image
     image = Image.open("screen.png")
 
-    image = image.convert("RGBA").resize(
+    image = image.convert("RGB").resize(
         [
             int(image.width * (2880 / 1920) // (image_resolution)),
             int(image.height * (1800 / 1200) // (image_resolution)),

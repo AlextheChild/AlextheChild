@@ -1,9 +1,9 @@
 import os
 from PIL import Image
 
-sender_directory = os.listdir("cnn/data/new_images")
+sender_directory = os.listdir("models/cnn/data/new_images")
 
 for file in sender_directory:
-    image = Image.open("cnn/data/new_images/" + file)
+    image = Image.open("models/cnn/data/new_images/" + file)
     image = image.resize((2880, 1800))
-    image.save("cnn/data/new_images/" + file)
+    image.save("models/cnn/data/new_images/" + file)

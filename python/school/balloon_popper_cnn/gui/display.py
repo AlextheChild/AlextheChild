@@ -62,12 +62,16 @@ def update(l, d):
 
 
 def reset_bounds(event):
+    global robot_on
+
     robot_on = False
     b.create_bounds_window(root)
     robot_on = True
 
 
 def switch_robot(event):
+    global robot_on
+
     robot_on = not robot_on
 
 
@@ -90,6 +94,8 @@ def display_ai_output(lefttop=[0, 0], dimensions=[r.size()[0] // 2, r.size()[1]]
     root.geometry(
         f"{dimensions[0]}x{dimensions[1] - top_bar_height}+{r.size()[0]-dimensions[0]}+0"
     )
+    root.focus_set()
+    root.lift()
 
     # keybindings
     root.bind("<b>", reset_bounds)
