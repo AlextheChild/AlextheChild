@@ -1,15 +1,16 @@
 import tensorflow as tf
 from tensorflow import keras
+import cv2
 import numpy as np
 from PIL import Image
-
-import pyautogui as robot
-import cv2
-import random
 
 tf.function(reduce_retracing=True)
 
 model = keras.models.load_model("cnn/models/vgg_good_20_20.keras")
+
+
+def get_predictions():
+    return get_selective_search_proposals()
 
 
 # ————— ccn functions ————— #
@@ -57,7 +58,14 @@ def get_cnn_prediction():
     return balloon_positions
 
 
-# ————— yolo stuff ————— #
+# ————— yolo functions ————— #
+
+"""
+! get selective search boxes
+! for the ones that are too big, maybe split them in half widthwise
+! classify them
+! apply NMS
+"""
 
 
 def get_selective_search_proposals():
